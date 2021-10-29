@@ -9,3 +9,57 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Empresa {
+  id                     Int       @id @default(autoincrement())
+  nome                   String    @db.VarChar(100)
+  cnpj                   String    @db.VarChar(14)
+  telefone               String    @db.VarChar(11)
+  quantidade_vagas_moto  Int
+  quantidade_vagas_carro Int
+  created_at             DateTime  @default(now())
+  updated_at             DateTime  @updatedAt
+  Endereco               Endereco?
+  Vaga                   Vaga[]
+}
+
+model Endereco {
+  id          Int     @id @default(autoincrement())
+  empresa     Empresa @relation(fields: [empresaId], references: [id])
+  empresaId   Int     @unique
+  cep         String  @db.VarChar(8)
+  rua         String
+  numero      String  @db.VarChar(5)
+  cidade      String
+  estado      String  @db.VarChar(2)
+  complemento String?
+}
+
+model Vaga {
+  id                Int                @id @default(autoincrement())
+  empresa           Empresa            @relation(fields: [empresaId], references: [id])
+  empresaId         Int
+  tipo              String             @db.VarChar(5)
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+  Historico_Veiculo Historico_Veiculo?
+}
+
+model Veiculo {
+  id                Int                @id @default(autoincrement())
+  marca             String             @db.VarChar(20)
+  modelo            String             @db.VarChar(20)
+  cor               String             @db.VarChar(20)
+  placa             String             @db.VarChar(7)
+  tipo              String             @db.VarChar(5)
+  Historico_Veiculo Historico_Veiculo?
+}
+
+model Historico_Veiculo {
+  id      Int     @id @default(autoincrement())
+  vaga    Vaga    @relation(fields: [vagaId], references: [id])
+  vagaId  Int     @unique
+  veiculo Veiculo @relation(fields: [veiculoId], references: [id])
+
+  veiculoId Int @unique
+}
