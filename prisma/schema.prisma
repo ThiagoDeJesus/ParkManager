@@ -11,28 +11,29 @@ datasource db {
 }
 
 model Empresa {
-  id                     Int       @id @default(autoincrement())
-  nome                   String    @db.VarChar(100)
-  cnpj                   String    @db.VarChar(14)
-  telefone               String    @db.VarChar(11)
+  id                     Int      @id @default(autoincrement())
+  nome                   String   @db.VarChar(100)
+  cnpj                   String   @unique @db.VarChar(14)
+  telefone               String   @db.VarChar(12)
   quantidade_vagas_moto  Int
   quantidade_vagas_carro Int
-  created_at             DateTime  @default(now())
-  updated_at             DateTime  @updatedAt
-  Endereco               Endereco?
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+  Endereco               Endereco @relation(fields: [enderecoId], references: [id])
+  enderecoId             Int      @unique
   Vaga                   Vaga[]
 }
 
 model Endereco {
-  id          Int     @id @default(autoincrement())
-  empresa     Empresa @relation(fields: [empresaId], references: [id])
-  empresaId   Int     @unique
-  cep         String  @db.VarChar(8)
+  id          Int      @id @default(autoincrement())
+  cep         String   @db.VarChar(8)
   rua         String
-  numero      String  @db.VarChar(5)
+  numero      String   @db.VarChar(5)
+  bairro      String
   cidade      String
-  estado      String  @db.VarChar(2)
+  estado      String   @db.VarChar(2)
   complemento String?
+  Empresa     Empresa?
 }
 
 model Vaga {
