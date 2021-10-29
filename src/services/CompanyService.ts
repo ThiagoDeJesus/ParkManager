@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+
 import prisma from "../prisma";
 
 import { AddressService } from "./AddressService";
@@ -33,14 +35,23 @@ class CompanyService {
       company.endereco
     );
 
-    return await prisma.empresa.create({
-      data: {
-        ...empresa,
-        Endereco: {
-          create: enderecoParsed,
+    try {
+      return await prisma.empresa.create({
+        data: {
+          ...empresa,
+          Endereco: {
+            create: enderecoParsed,
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          throw new Error("Essa empresa já está cadastrada");
+        }
+      }
+      throw error;
+    }
   }
 
   private formatCompany(company: ICompany) {
