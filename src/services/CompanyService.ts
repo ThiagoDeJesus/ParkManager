@@ -1,4 +1,7 @@
 import prisma from "../prisma";
+
+import { AddressService } from "./AddressService";
+
 import { onlyNumbers } from "../utils/format";
 import { validateCNPJ } from "../utils/validation";
 
@@ -22,59 +25,13 @@ interface ICompany {
 }
 
 class CompanyService {
-  async createCompany({
-    nome,
-    cnpj,
-    telefone,
-    quantidade_vagas_carro,
-    quantidade_vagas_moto,
-    endereco,
-  }: ICompany) {
-    if (!nome) {
-      // To Do Error
-      throw new Error("Nome inválido");
-    }
+  async createCompany(company: ICompany) {
+    const empresa = this.validateCompany(company);
 
-    if (!cnpj || !validateCNPJ(cnpj)) {
-      // To Do Error
-      throw new Error("Cnpj inválido");
-    }
-
-    if (!telefone || telefone.length < 12) {
-      // To Do Error
-      throw new Error("Telefone inválido");
-    }
-
-    // To Do Validate Address
-    // Temp
-    if (
-      !endereco.cep ||
-      !endereco.rua ||
-      !endereco.numero ||
-      !endereco.cidade ||
-      !endereco.estado
-    ) {
-      // To Do Error
-      throw new Error("Endereço inválido");
-    }
-
-    const empresa = {
-      nome: nome.trim(),
-      cnpj: onlyNumbers(cnpj),
-      telefone: onlyNumbers(telefone),
-      quantidade_vagas_carro,
-      quantidade_vagas_moto,
-    };
-
-    const enderecoParsed = {
-      cep: onlyNumbers(endereco.cep),
-      rua: endereco.rua.trim(),
-      numero: endereco.numero.trim(),
-      bairro: endereco.bairro.trim(),
-      cidade: endereco.cidade.trim(),
-      estado: endereco.estado.trim(),
-      complemento: endereco.complemento || null,
-    };
+    const addressService = new AddressService();
+    const enderecoParsed = await addressService.validateAddress(
+      company.endereco
+    );
 
     return await prisma.empresa.create({
       data: {
@@ -84,6 +41,56 @@ class CompanyService {
         },
       },
     });
+  }
+
+  private formatCompany(company: ICompany) {
+    if (!company.nome) {
+      // To Do Error
+      throw new Error("Nome está vazio");
+    }
+
+    if (!company.cnpj) {
+      // To Do Error
+      throw new Error("CNPJ está vazio");
+    }
+
+    if (!company.telefone) {
+      // To Do Error
+      throw new Error("Telefone está vazio");
+    }
+
+    return {
+      nome: company.nome.trim(),
+      cnpj: onlyNumbers(company.cnpj),
+      telefone: onlyNumbers(company.telefone),
+      quantidade_vagas_carro: Number(company.quantidade_vagas_carro),
+      quantidade_vagas_moto: Number(company.quantidade_vagas_moto),
+    };
+  }
+
+  validateCompany(company: ICompany) {
+    const empresa = this.formatCompany(company);
+
+    if (!empresa.nome) {
+      throw new Error("Nome inválido");
+    }
+
+    if (!empresa.cnpj || !validateCNPJ(empresa.cnpj)) {
+      throw new Error("CNPJ inválido");
+    }
+
+    if (!empresa.telefone || empresa.telefone.length < 12) {
+      throw new Error("Telefone inválido");
+    }
+
+    if (
+      isNaN(empresa.quantidade_vagas_moto) ||
+      isNaN(empresa.quantidade_vagas_carro)
+    ) {
+      throw new Error("Número de vagas está no formato incorreto");
+    }
+
+    return empresa;
   }
 }
 

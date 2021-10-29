@@ -25,11 +25,9 @@ class CompanyController {
         endereco,
       });
 
-      console.log(request.body);
-
       return response.json({ empresa });
     } catch (err: any) {
-      return response.status(400).json({ err: err.message });
+      return response.status(400).json({ error: err.message });
     }
   }
 }
