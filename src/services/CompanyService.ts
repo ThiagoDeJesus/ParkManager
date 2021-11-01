@@ -26,6 +26,10 @@ interface ICompany {
   endereco: IAddress;
 }
 
+interface IVaga {
+  tipo: "carro" | "moto";
+}
+
 class CompanyService {
   async createCompany(company: ICompany) {
     const empresa = this.validateCompany(company);
@@ -34,6 +38,10 @@ class CompanyService {
     const enderecoParsed = await addressService.validateAddress(
       company.endereco
     );
+    const vagas = this.createVagas(
+      empresa.quantidade_vagas_carro,
+      empresa.quantidade_vagas_moto
+    );
 
     try {
       return await prisma.empresa.create({
@@ -41,6 +49,9 @@ class CompanyService {
           ...empresa,
           Endereco: {
             create: enderecoParsed,
+          },
+          Vaga: {
+            create: vagas,
           },
         },
       });
@@ -102,6 +113,21 @@ class CompanyService {
     }
 
     return empresa;
+  }
+
+  private createVagas(
+    quantidade_vagas_carro: number,
+    quantidade_vagas_moto: number
+  ) {
+    const vagas: IVaga[] = [];
+
+    vagas.length = quantidade_vagas_carro + quantidade_vagas_moto;
+
+    vagas.fill({ tipo: "carro" }, 0, quantidade_vagas_carro);
+
+    vagas.fill({ tipo: "moto" }, quantidade_vagas_carro);
+
+    return vagas;
   }
 }
 
