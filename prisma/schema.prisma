@@ -47,20 +47,21 @@ model Vaga {
 }
 
 model Veiculo {
-  id                Int                @id @default(autoincrement())
-  marca             String             @db.VarChar(20)
-  modelo            String             @db.VarChar(20)
-  cor               String             @db.VarChar(20)
-  placa             String             @db.VarChar(7)
-  tipo              String             @db.VarChar(5)
-  Historico_Veiculo Historico_Veiculo?
+  id                  Int               @id @default(autoincrement())
+  marca               String            @db.VarChar(20)
+  modelo              String            @db.VarChar(20)
+  cor                 String            @db.VarChar(20)
+  placa               String            @db.VarChar(7)
+  tipo                String            @db.VarChar(5)
+  entrada             DateTime          @default(now())
+  saida               DateTime          @updatedAt
+  Historico_Veiculo   Historico_Veiculo @relation(fields: [historico_VeiculoId], references: [id])
+  historico_VeiculoId Int
 }
 
 model Historico_Veiculo {
-  id      Int     @id @default(autoincrement())
-  vaga    Vaga    @relation(fields: [vagaId], references: [id])
-  vagaId  Int     @unique
-  veiculo Veiculo @relation(fields: [veiculoId], references: [id])
-
-  veiculoId Int @unique
+  id      Int       @id @default(autoincrement())
+  vaga    Vaga      @relation(fields: [vagaId], references: [id])
+  vagaId  Int       @unique
+  Veiculo Veiculo[]
 }
