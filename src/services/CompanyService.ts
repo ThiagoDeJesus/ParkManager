@@ -1,11 +1,11 @@
 import { Prisma } from "@prisma/client";
 
-import prisma from "../prisma";
+import prisma from "@src/prisma";
 
-import { AddressService } from "./AddressService";
+import { AddressService } from "@services/AddressService";
 
-import { onlyNumbers } from "../utils/format";
-import { validateCNPJ } from "../utils/validation";
+import { onlyNumbers } from "@utils/format";
+import { validateCNPJ } from "@utils/validation";
 
 interface IAddress {
   cep: string;

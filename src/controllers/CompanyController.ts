@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { CompanyService } from "../services/CompanyService";
+import { CompanyService } from "@services/CompanyService";
 
 class CompanyController {
   async createCompany(request: Request, response: Response) {

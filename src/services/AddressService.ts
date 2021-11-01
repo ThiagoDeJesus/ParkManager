@@ -1,5 +1,5 @@
 import axios from "axios";
-import { onlyNumbers } from "../utils/format";
+import { onlyNumbers } from "@utils/format";
 
 interface IAddress {
   cep: string;
