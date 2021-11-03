@@ -61,5 +61,5 @@ model HistoricoVeiculo {
   veiculo   Veiculo  @relation(fields: [veiculoId], references: [id])
   veiculoId Int
   entrada   DateTime @default(now())
-  saida     DateTime
+  saida     DateTime?
 }
