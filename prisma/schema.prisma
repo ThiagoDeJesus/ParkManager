@@ -49,7 +49,7 @@ model Veiculo {
   marca            String             @db.VarChar(20)
   modelo           String             @db.VarChar(20)
   cor              String             @db.VarChar(20)
-  placa            String             @db.VarChar(7)
+  placa            String             @unique @db.VarChar(7)
   tipo             String             @db.VarChar(5)
   HistoricoVeiculo HistoricoVeiculo[]
 }
