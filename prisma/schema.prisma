@@ -37,24 +37,29 @@ model Endereco {
 }
 
 model Vaga {
-  id         Int       @id @default(autoincrement())
-  empresa    Empresa   @relation(fields: [empresaId], references: [id])
-  empresaId  Int
-  tipo       String    @db.VarChar(5)
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  Veiculo    Veiculo[]
+  id               Int                @id @default(autoincrement())
+  empresa          Empresa            @relation(fields: [empresaId], references: [id])
+  empresaId        Int
+  tipo             String             @db.VarChar(5)
+  HistoricoVeiculo HistoricoVeiculo[]
 }
 
 model Veiculo {
-  id      Int      @id @default(autoincrement())
-  marca   String   @db.VarChar(20)
-  modelo  String   @db.VarChar(20)
-  cor     String   @db.VarChar(20)
-  placa   String   @db.VarChar(7)
-  tipo    String   @db.VarChar(5)
-  entrada DateTime @default(now())
-  saida   DateTime @updatedAt
-  vaga    Vaga     @relation(fields: [vagaId], references: [id])
-  vagaId  Int
+  id               Int                @id @default(autoincrement())
+  marca            String             @db.VarChar(20)
+  modelo           String             @db.VarChar(20)
+  cor              String             @db.VarChar(20)
+  placa            String             @db.VarChar(7)
+  tipo             String             @db.VarChar(5)
+  HistoricoVeiculo HistoricoVeiculo[]
+}
+
+model HistoricoVeiculo {
+  id        Int      @id @default(autoincrement())
+  vaga      Vaga     @relation(fields: [vagaId], references: [id])
+  vagaId    Int
+  veiculo   Veiculo  @relation(fields: [veiculoId], references: [id])
+  veiculoId Int
+  entrada   DateTime @default(now())
+  saida     DateTime
 }
