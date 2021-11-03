@@ -129,6 +129,18 @@ class CompanyService {
 
     return vagas;
   }
+
+  async getCompanyByCnpj(cnpj: string) {
+    const empresa = await prisma.empresa.findUnique({
+      where: {
+        cnpj: onlyNumbers(cnpj),
+      },
+    });
+    if (!empresa) {
+      throw new Error("Empresa não encontrada");
+    }
+    return empresa;
+  }
 }
 
 export { CompanyService };

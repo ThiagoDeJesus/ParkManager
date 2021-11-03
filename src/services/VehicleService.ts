@@ -27,6 +27,19 @@ class VehicleService {
       throw error;
     }
   }
+
+  async getVehicleByPlate(plate: string) {
+    const veiculo = await prisma.veiculo.findUnique({
+      where: {
+        placa: plate,
+      },
+    });
+    if (!veiculo) {
+      throw new Error("Este veículo não está cadastrado");
+    }
+    return veiculo;
+  }
+
   validateVehicle({ marca, modelo, cor, placa, tipo }: IVehicle) {
     if (marca.length < 0) {
       throw new Error("O preenchimento da marca do veículo é obrigatório");
