@@ -1,11 +1,6 @@
-### FCamara 🚀
-*"Queremos ser como uma árvore, 
-  crescer um pouco todos os dias e tentar tocar o céu, 
-  sem perder a solidez de nossas raízes."*
-Conheça: www.fcamara.com.br
-
-## Teste para vaga de Desenvolvedor Back-end
-Criar uma API REST para gerenciar um estacionamento de carros e motos.
+## Desafio de vaga Back-end
+Desafio desenvolvido pela FCamara onde o objetivo é criar uma API REST para gerenciar empresas com estacionamento de carros e motos.
+[Repositório original](https://github.com/fcamarasantos/backend-test-java)
 
 ## Cadastro de estabelecimento
 
@@ -51,9 +46,3 @@ Criar um cadastro de veículos com os seguintes campos:
    - [ ] Sumário da quantidade de entrada e saída;
    - [ ] Sumário da quantidade de entrada e saída de veículos por hora;
    - [ ] Criar uma solução de autenticação.
-
-## Submissão
-Crie um fork do teste para acompanharmos o seu desenvolvimento através dos seus commits.
-
-## Obrigado!
-Agradecemos sua participação no teste. Boa sorte! 😄
