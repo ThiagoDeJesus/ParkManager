@@ -11,17 +11,18 @@ datasource db {
 }
 
 model Empresa {
-  id                     Int      @id @default(autoincrement())
-  nome                   String   @db.VarChar(100)
-  cnpj                   String   @unique @db.VarChar(14)
-  telefone               String   @db.VarChar(12)
+  id                     Int                @id @default(autoincrement())
+  nome                   String             @db.VarChar(100)
+  cnpj                   String             @unique @db.VarChar(14)
+  telefone               String             @db.VarChar(12)
   quantidade_vagas_moto  Int
   quantidade_vagas_carro Int
-  created_at             DateTime @default(now())
-  updated_at             DateTime @updatedAt
-  Endereco               Endereco @relation(fields: [enderecoId], references: [id])
-  enderecoId             Int      @unique
+  created_at             DateTime           @default(now())
+  updated_at             DateTime           @updatedAt
+  Endereco               Endereco           @relation(fields: [enderecoId], references: [id])
+  enderecoId             Int                @unique
   Vaga                   Vaga[]
+  HistoricoVeiculo       HistoricoVeiculo[]
 }
 
 model Endereco {
@@ -55,11 +56,13 @@ model Veiculo {
 }
 
 model HistoricoVeiculo {
-  id        Int      @id @default(autoincrement())
-  vaga      Vaga     @relation(fields: [vagaId], references: [id])
+  id        Int       @id @default(autoincrement())
+  empresa   Empresa   @relation(fields: [empresaId], references: [id])
+  empresaId Int
+  vaga      Vaga      @relation(fields: [vagaId], references: [id])
   vagaId    Int
-  veiculo   Veiculo  @relation(fields: [veiculoId], references: [id])
+  veiculo   Veiculo   @relation(fields: [veiculoId], references: [id])
   veiculoId Int
-  entrada   DateTime @default(now())
+  entrada   DateTime  @default(now())
   saida     DateTime?
 }
