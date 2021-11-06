@@ -77,4 +77,4 @@ class AddressService {
   }
 }
 
-export { AddressService };
+export default new AddressService();

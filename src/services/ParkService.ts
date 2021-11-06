@@ -6,15 +6,12 @@ import {
 
 import prisma from "@src/prisma";
 
-import { IVehicle, VehicleService } from "@services/VehicleService";
-import { CompanyService } from "./CompanyService";
+import vehicleService, { IVehicle } from "@services/VehicleService";
+import companyService from "./CompanyService";
 
 interface IVaga {
   tipo: "carro" | "moto";
 }
-
-const companyService = new CompanyService();
-const vehicleService = new VehicleService();
 
 class ParkService {
   async enterVehicle(vehicle: IVehicle, cnpj: string) {
@@ -128,4 +125,4 @@ class ParkService {
   }
 }
 
-export { ParkService };
+export default new ParkService();

@@ -138,4 +138,5 @@ class VehicleService {
   }
 }
 
-export { VehicleService, IVehicle };
+export default new VehicleService();
+export { IVehicle };

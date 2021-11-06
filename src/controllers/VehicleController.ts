@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 
-import { VehicleService, IVehicle } from "@services/VehicleService";
+import vehicleService, { IVehicle } from "@services/VehicleService";
 
-const vehicleService = new VehicleService();
 class VehicleController {
   async create(request: Request, response: Response) {
     const { marca, modelo, cor, placa, tipo }: IVehicle = request.body;

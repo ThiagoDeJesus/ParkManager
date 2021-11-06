@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { ParkService } from "@src/services/ParkService";
+import parkService from "@src/services/ParkService";
 import { IVehicle } from "@src/services/VehicleService";
 
 interface IEnterRequestBody {
@@ -11,8 +11,6 @@ interface IEnterRequestBody {
 interface ILeaveRequestBody {
   plate: string;
 }
-
-const parkService = new ParkService();
 
 class ParkController {
   async enter(request: Request, response: Response) {

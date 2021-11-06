@@ -2,8 +2,8 @@ import { Prisma } from "@prisma/client";
 
 import prisma from "@src/prisma";
 
-import { AddressService } from "@services/AddressService";
-import { ParkService } from "@services/ParkService";
+import addressService from "@services/AddressService";
+import parkService from "@services/ParkService";
 
 import { onlyNumbers } from "@utils/format";
 import { validateCNPJ } from "@utils/validation";
@@ -26,9 +26,6 @@ interface ICompany {
   quantidade_vagas_moto: number;
   endereco: IAddress;
 }
-
-const parkService = new ParkService();
-const addressService = new AddressService();
 
 class CompanyService {
   async create(company: ICompany) {
@@ -226,4 +223,5 @@ class CompanyService {
   }
 }
 
-export { CompanyService, ICompany };
+export default new CompanyService();
+export { ICompany };

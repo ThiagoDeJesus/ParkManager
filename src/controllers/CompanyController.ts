@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 
-import { CompanyService, ICompany } from "@services/CompanyService";
+import companyService, { ICompany } from "@services/CompanyService";
 
-const companyService = new CompanyService();
 class CompanyController {
   async create(request: Request, response: Response) {
     const {
