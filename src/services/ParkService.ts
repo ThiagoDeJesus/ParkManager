@@ -9,6 +9,10 @@ import prisma from "@src/prisma";
 import { IVehicle, VehicleService } from "@services/VehicleService";
 import { CompanyService } from "./CompanyService";
 
+interface IVaga {
+  tipo: "carro" | "moto";
+}
+
 const companyService = new CompanyService();
 const vehicleService = new VehicleService();
 
@@ -93,7 +97,19 @@ class ParkService {
     return true;
   }
 
-  async getVaga(company: IPrismaEmpresa, tipo: "carro" | "moto") {
+  createVagas(quantidade_vagas_carro: number, quantidade_vagas_moto: number) {
+    const vagas: IVaga[] = [];
+
+    vagas.length = quantidade_vagas_carro + quantidade_vagas_moto;
+
+    vagas.fill({ tipo: "carro" }, 0, quantidade_vagas_carro);
+
+    vagas.fill({ tipo: "moto" }, quantidade_vagas_carro);
+
+    return vagas;
+  }
+
+  async getVaga(company: IPrismaEmpresa, tipo: IVaga["tipo"]) {
     const vaga = await prisma.vaga.findFirst({
       where: {
         empresaId: company.id,

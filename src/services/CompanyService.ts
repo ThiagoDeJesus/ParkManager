@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import prisma from "@src/prisma";
 
 import { AddressService } from "@services/AddressService";
+import { ParkService } from "@services/ParkService";
 
 import { onlyNumbers } from "@utils/format";
 import { validateCNPJ } from "@utils/validation";
@@ -26,19 +27,17 @@ interface ICompany {
   endereco: IAddress;
 }
 
-interface IVaga {
-  tipo: "carro" | "moto";
-}
+const parkService = new ParkService();
+const addressService = new AddressService();
 
 class CompanyService {
   async create(company: ICompany) {
     const empresa = this.validate(company);
 
-    const addressService = new AddressService();
     const enderecoParsed = await addressService.validateAddress(
       company.endereco
     );
-    const vagas = this.createVagas(
+    const vagas = parkService.createVagas(
       empresa.quantidade_vagas_carro,
       empresa.quantidade_vagas_moto
     );
@@ -224,21 +223,6 @@ class CompanyService {
     }
 
     return empresa;
-  }
-
-  private createVagas(
-    quantidade_vagas_carro: number,
-    quantidade_vagas_moto: number
-  ) {
-    const vagas: IVaga[] = [];
-
-    vagas.length = quantidade_vagas_carro + quantidade_vagas_moto;
-
-    vagas.fill({ tipo: "carro" }, 0, quantidade_vagas_carro);
-
-    vagas.fill({ tipo: "moto" }, quantidade_vagas_carro);
-
-    return vagas;
   }
 }
 
