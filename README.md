@@ -27,8 +27,8 @@ Criar um cadastro de veículos com os seguintes campos:
 
 ## Funcionalidades
 
-   - [ ] **Estabelecimento:** CRUD;
-   - [ ] **Veículos:** CRUD;
+   - [x] **Estabelecimento:** CRUD;
+   - [x] **Veículos:** CRUD;
    - [ ] **Controle de entrada e saída de veículos.**
 
 ## Requisitos
@@ -36,7 +36,7 @@ Criar um cadastro de veículos com os seguintes campos:
    - [x] Modelagem de dados;
    - [x] Retorno em JSON;
    - [ ] Retorno em XML;
-   - [ ] Requisições GET, POST, PUT ou DELETE, conforme a melhor prática;
+   - [x] Requisições GET, POST, PUT ou DELETE, conforme a melhor prática;
    - [x] A persistência dos dados pode ser realizada da maneira que preferir;
    - [ ] Criar README do projeto descrevendo as tecnologias utilizadas, chamadas dos serviços e configurações necessário para executar a aplicação.
    
