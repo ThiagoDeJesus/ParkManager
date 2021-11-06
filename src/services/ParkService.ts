@@ -14,7 +14,7 @@ const vehicleService = new VehicleService();
 
 class ParkService {
   async enterVehicle(vehicle: IVehicle, cnpj: string) {
-    const empresa = await companyService.getCompanyByCnpj(cnpj);
+    const empresa = await companyService.getByCnpj(cnpj);
 
     const vaga = await this.getVaga(empresa, vehicle.tipo);
 
@@ -27,6 +27,7 @@ class ParkService {
 
     return await prisma.historicoVeiculo.create({
       data: {
+        empresaId: vaga!.empresaId,
         vagaId: vaga!.id,
         veiculoId: veiculo!.id,
       },

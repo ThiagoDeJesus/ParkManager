@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 
-import { CompanyService } from "@services/CompanyService";
+import { CompanyService, ICompany } from "@services/CompanyService";
 
+const companyService = new CompanyService();
 class CompanyController {
-  async createCompany(request: Request, response: Response) {
+  async create(request: Request, response: Response) {
     const {
       nome,
       cnpj,
@@ -11,12 +12,10 @@ class CompanyController {
       quantidade_vagas_carro,
       quantidade_vagas_moto,
       endereco,
-    } = request.body;
-
-    const companyService = new CompanyService();
+    }: ICompany = request.body;
 
     try {
-      const empresa = await companyService.createCompany({
+      const empresa = await companyService.create({
         nome,
         cnpj,
         telefone,
@@ -27,6 +26,62 @@ class CompanyController {
 
       return response.json({ empresa });
     } catch (err: any) {
+      return response.status(400).json({ error: err.message });
+    }
+  }
+
+  async getOne(request: Request, response: Response) {
+    const id = Number(request.params.id);
+
+    if (isNaN(id)) {
+      return response.status(400).json({ error: "Id precisa ser um inteiro" });
+    }
+
+    try {
+      const empresa = await companyService.getById(id);
+
+      return response.json({ empresa });
+    } catch (err: any) {
+      return response.status(400).json({ error: err.message });
+    }
+  }
+
+  async getAll(request: Request, response: Response) {
+    try {
+      const empresas = await companyService.getAll();
+
+      return response.json({ empresas });
+    } catch (err: any) {
+      return response.status(400).json({ error: err.message });
+    }
+  }
+
+  async update(request: Request, response: Response) {
+    const { id } = request.params;
+    const company: Partial<ICompany> = request.body;
+
+    try {
+      const companyResponse = await companyService.update(Number(id), company);
+
+      return response.status(200).json({ empresa: companyResponse });
+    } catch (err: any) {
+      return response.status(400).json({ error: err.message });
+    }
+  }
+
+  async delete(request: Request, response: Response) {
+    const id = Number(request.params.id);
+
+    if (isNaN(id)) {
+      return response.status(400).json({ error: "Id precisa ser um inteiro" });
+    }
+
+    try {
+      const empresa = await companyService.deleteById(id);
+
+      return response.json({ empresa });
+    } catch (err: any) {
+      console.log(err);
       return response.status(400).json({ error: err.message });
     }
   }

@@ -31,8 +31,8 @@ interface IVaga {
 }
 
 class CompanyService {
-  async createCompany(company: ICompany) {
-    const empresa = this.validateCompany(company);
+  async create(company: ICompany) {
+    const empresa = this.validate(company);
 
     const addressService = new AddressService();
     const enderecoParsed = await addressService.validateAddress(
@@ -65,7 +65,118 @@ class CompanyService {
     }
   }
 
-  private formatCompany(company: ICompany) {
+  async getById(id: number) {
+    try {
+      const empresa = await prisma.empresa.findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          Endereco: true,
+        },
+      });
+
+      if (!empresa) {
+        throw new Error("Empresa não encontrada");
+      }
+
+      return empresa;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2001") {
+          throw new Error("Essa empresa não está cadastrada");
+        }
+      }
+      throw error;
+    }
+  }
+
+  async getByCnpj(cnpj: string) {
+    const empresa = await prisma.empresa.findUnique({
+      where: {
+        cnpj: onlyNumbers(cnpj),
+      },
+    });
+    if (!empresa) {
+      throw new Error("Empresa não encontrada");
+    }
+    return empresa;
+  }
+
+  async getAll() {
+    return await prisma.empresa.findMany({
+      include: {
+        Endereco: true,
+      },
+    });
+  }
+
+  async update(id: number, company: Partial<ICompany>) {
+    const address = company.endereco;
+    delete company.endereco;
+
+    try {
+      return await prisma.empresa.update({
+        where: {
+          id: id,
+        },
+        data: {
+          ...company,
+          Endereco: {
+            update: address,
+          },
+        },
+        include: {
+          Endereco: true,
+        },
+      });
+    } catch (error) {
+      // console.log(error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2025") {
+          throw new Error("Empresa não encontrada");
+        }
+      }
+      throw error;
+    }
+  }
+
+  async deleteById(id: number) {
+    try {
+      await prisma.historicoVeiculo.deleteMany({
+        where: {
+          empresaId: id,
+        },
+      });
+
+      await prisma.vaga.deleteMany({
+        where: {
+          empresaId: id,
+        },
+      });
+
+      const empresa = await prisma.empresa.delete({
+        where: {
+          id: id,
+        },
+        include: {
+          Endereco: true,
+        },
+      });
+
+      await prisma.endereco.delete({
+        where: {
+          id: empresa.enderecoId,
+        },
+      });
+
+      return empresa;
+    } catch (err) {
+      throw new Error("Empresa não encontrada");
+    }
+  }
+
+  private format(company: ICompany) {
     if (!company.nome) {
       // To Do Error
       throw new Error("Nome está vazio");
@@ -90,8 +201,8 @@ class CompanyService {
     };
   }
 
-  validateCompany(company: ICompany) {
-    const empresa = this.formatCompany(company);
+  validate(company: ICompany) {
+    const empresa = this.format(company);
 
     if (!empresa.nome) {
       throw new Error("Nome inválido");
@@ -129,18 +240,6 @@ class CompanyService {
 
     return vagas;
   }
-
-  async getCompanyByCnpj(cnpj: string) {
-    const empresa = await prisma.empresa.findUnique({
-      where: {
-        cnpj: onlyNumbers(cnpj),
-      },
-    });
-    if (!empresa) {
-      throw new Error("Empresa não encontrada");
-    }
-    return empresa;
-  }
 }
 
-export { CompanyService };
+export { CompanyService, ICompany };
