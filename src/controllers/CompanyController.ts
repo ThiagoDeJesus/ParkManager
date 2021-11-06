@@ -57,11 +57,16 @@ class CompanyController {
   }
 
   async update(request: Request, response: Response) {
-    const { id } = request.params;
+    const id = Number(request.params.id);
+
+    if (isNaN(id)) {
+      return response.status(400).json({ error: "Id precisa ser um inteiro" });
+    }
+
     const company: Partial<ICompany> = request.body;
 
     try {
-      const companyResponse = await companyService.update(Number(id), company);
+      const companyResponse = await companyService.update(id, company);
 
       return response.status(200).json({ empresa: companyResponse });
     } catch (err: any) {
