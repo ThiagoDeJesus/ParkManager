@@ -10,7 +10,7 @@ interface IEnterRequestBody {
 }
 
 interface ILeaveRequestBody {
-  plate: string;
+  vehicle: IVehicle;
 }
 
 class ParkController {
@@ -28,10 +28,10 @@ class ParkController {
   }
 
   async leave(request: Request, response: Response) {
-    const { plate }: ILeaveRequestBody = request.body;
+    const { vehicle }: ILeaveRequestBody = request.body;
 
     try {
-      const historico = await parkService.leaveVehicle(plate);
+      const historico = await parkService.leaveVehicle(vehicle.placa);
 
       return decideJsonOrXml(request, response, { historico });
     } catch (err: any) {

@@ -36,6 +36,7 @@ class ParkService {
   }
 
   async leaveVehicle(vehiclePlate: string) {
+    console.log(vehiclePlate);
     const veiculo = await vehicleService.getVehicleByPlate(vehiclePlate);
 
     const isParked = await this.checkIfIsParked(veiculo);
