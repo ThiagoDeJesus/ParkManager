@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import vehicleService, { IVehicle } from "@services/VehicleService";
+import { decideJsonOrXml } from "@src/utils";
 
 class VehicleController {
   async create(request: Request, response: Response) {
@@ -15,9 +16,10 @@ class VehicleController {
         tipo,
       });
 
-      return response.json(vehicle);
+      return decideJsonOrXml(request, response, { veiculo: vehicle });
     } catch (err: any) {
-      return response.status(404).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 
@@ -31,9 +33,10 @@ class VehicleController {
     try {
       const vehicle = await vehicleService.getById(id);
 
-      return response.json({ vehicle });
+      return decideJsonOrXml(request, response, { vehicle });
     } catch (err: any) {
-      return response.status(400).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 
@@ -41,9 +44,10 @@ class VehicleController {
     try {
       const vehicles = await vehicleService.getAll();
 
-      return response.json({ veiculos: vehicles });
+      return decideJsonOrXml(request, response, { veiculos: vehicles });
     } catch (err: any) {
-      return response.status(400).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 
@@ -59,9 +63,10 @@ class VehicleController {
     try {
       const vehicleResponse = await vehicleService.update(id, vehicle);
 
-      return response.status(200).json({ empresa: vehicleResponse });
+      return decideJsonOrXml(request, response, { veiculo: vehicle });
     } catch (err: any) {
-      return response.status(400).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 
@@ -75,10 +80,10 @@ class VehicleController {
     try {
       const vehicle = await vehicleService.deleteById(id);
 
-      return response.json({ veiculo: vehicle });
+      return decideJsonOrXml(request, response, { veiculo: vehicle });
     } catch (err: any) {
-      console.log(err);
-      return response.status(400).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 }

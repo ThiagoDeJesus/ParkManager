@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import companyService, { ICompany } from "@services/CompanyService";
+import { decideJsonOrXml } from "@src/utils";
 
 class CompanyController {
   async create(request: Request, response: Response) {
@@ -23,9 +24,10 @@ class CompanyController {
         endereco,
       });
 
-      return response.json({ empresa });
+      return decideJsonOrXml(request, response, { empresa });
     } catch (err: any) {
-      return response.status(400).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 
@@ -39,9 +41,10 @@ class CompanyController {
     try {
       const empresa = await companyService.getById(id);
 
-      return response.json({ empresa });
+      return decideJsonOrXml(request, response, { empresa });
     } catch (err: any) {
-      return response.status(400).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 
@@ -49,9 +52,10 @@ class CompanyController {
     try {
       const empresas = await companyService.getAll();
 
-      return response.json({ empresas });
+      return decideJsonOrXml(request, response, { empresas });
     } catch (err: any) {
-      return response.status(400).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 
@@ -67,9 +71,10 @@ class CompanyController {
     try {
       const companyResponse = await companyService.update(id, company);
 
-      return response.status(200).json({ empresa: companyResponse });
+      return decideJsonOrXml(request, response, { empresa: companyResponse });
     } catch (err: any) {
-      return response.status(400).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 
@@ -83,10 +88,10 @@ class CompanyController {
     try {
       const empresa = await companyService.deleteById(id);
 
-      return response.json({ empresa });
+      return decideJsonOrXml(request, response, { empresa });
     } catch (err: any) {
-      console.log(err);
-      return response.status(400).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 }

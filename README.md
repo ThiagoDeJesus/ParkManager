@@ -35,7 +35,7 @@ Criar um cadastro de veículos com os seguintes campos:
 
    - [x] Modelagem de dados;
    - [x] Retorno em JSON;
-   - [ ] Retorno em XML;
+   - [x] Retorno em XML;
    - [x] Requisições GET, POST, PUT ou DELETE, conforme a melhor prática;
    - [x] A persistência dos dados pode ser realizada da maneira que preferir;
    - [ ] Criar README do projeto descrevendo as tecnologias utilizadas, chamadas dos serviços e configurações necessário para executar a aplicação.

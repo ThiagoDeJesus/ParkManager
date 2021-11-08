@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import parkService from "@src/services/ParkService";
 import { IVehicle } from "@src/services/VehicleService";
+import { decideJsonOrXml } from "@src/utils";
 
 interface IEnterRequestBody {
   vehicle: IVehicle;
@@ -19,9 +20,10 @@ class ParkController {
     try {
       const historico = await parkService.enterVehicle(vehicle, cnpj);
 
-      return response.json({ historico });
+      return decideJsonOrXml(request, response, { historico });
     } catch (err: any) {
-      return response.status(404).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 
@@ -31,9 +33,10 @@ class ParkController {
     try {
       const historico = await parkService.leaveVehicle(plate);
 
-      return response.json({ historico });
+      return decideJsonOrXml(request, response, { historico });
     } catch (err: any) {
-      return response.status(404).json({ error: err.message });
+      response.status(400);
+      return decideJsonOrXml(request, response, { error: err.message });
     }
   }
 }
